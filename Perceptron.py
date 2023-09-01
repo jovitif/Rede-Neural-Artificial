@@ -1,30 +1,42 @@
 import numpy as np
 
-def signoid(x): # retorna qualuqer valor entre 0 e 1
-    return 1 / (1+ np.exp(-x))
+def funcaoDegrau(x):
+    return 1 if x >= 0 else 0
 
-#Exemplos de imputs para treinamento
-training_inputs = np.array([
-    [0,0,1],
-    [1,1,1],
-    [1,0,1],
-    [0,1,1]]
-)
+# TABELA DO XOR
+matrizEntrada = np.array([
+    [0, 0],
+    [1, 1],
+    [1, 0],
+    [0, 1]
+])
 
-#Saida
-training_outputs = np.array([[0,1,1,0]]).T
+# Saídas desejadas correspondentes às entradas
+training_outputs = np.array([0, 0, 1, 1])
 
+# Inicialização dos pesos sinápticos com valores aleatórios entre -1 e 1
 np.random.seed(1)
+pesos = 2 * np.random.random(2) - 1
 
-synaptic_weights = 2 * np.random.random((3,1))-1
+print('Pesos iniciais aleatórios: \n')
+print(pesos, "\n")
 
-print('Random starting synaptic weights:')
-print(synaptic_weights)
+# Treinamento do perceptron (várias iterações)
+for iteration in range(10000):
+    erro_total = 0
+    for i in range(len(matrizEntrada)):
+        input_layer = matrizEntrada[i]
+        output = funcaoDegrau(np.dot(input_layer, pesos))
+        erro = training_outputs[i] - output
+        pesos += 0.1 * erro * input_layer
+        erro_total += erro
 
-for iteration in range(1):
-    input_layer = training_inputs
-    outputs = signoid(np.dot(input_layer, synaptic_weights))
+    # Verifique se o erro total é zero (todas as saídas corretas)
+    if erro_total == 0:
+        break
 
-print('Outputs after training:')
-print(outputs)
-
+print('Saídas após o treinamento:\n')
+for i in range(len(matrizEntrada)):
+    input_layer = matrizEntrada[i]
+    output = funcaoDegrau(np.dot(input_layer, pesos))
+    print(f"Entrada: {input_layer}, Saída: {output}")
