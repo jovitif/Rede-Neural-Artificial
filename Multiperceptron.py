@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 # Função sigmoide para ativação
 def funcaoSigmoide(x):
@@ -57,3 +59,31 @@ for i in range(len(matrizEntrada)):
     output_camada_saida = funcaoSigmoide(input_camada_saida)
 
     print(f"Entrada: {input_layer}, Saída: {output_camada_saida[0]}")
+
+# Inicializar uma matriz para armazenar as saídas
+output_matrix = np.zeros((len(matrizEntrada), 1))
+
+# Teste com os dados de treinamento e armazene as saídas
+print('Saídas após o treinamento:\n')
+for i in range(len(matrizEntrada)):
+    input_layer = matrizEntrada[i]
+
+    input_camada_oculta = np.dot(input_layer, pesos_camada_oculta)
+    output_camada_oculta = funcaoSigmoide(input_camada_oculta)
+
+    input_camada_saida = np.dot(output_camada_oculta, pesos_camada_saida)
+    output_camada_saida = funcaoSigmoide(input_camada_saida)
+
+    output_matrix[i] = output_camada_saida[0]
+
+    print(f"Entrada: {input_layer}, Saída: {output_camada_saida[0]}")
+
+# Plotar um gráfico de dispersão com cores mapeadas para as saídas
+plt.figure(figsize=(8, 6))
+plt.scatter(matrizEntrada[:, 0], matrizEntrada[:, 1], c=output_matrix[:, 0], cmap='coolwarm')
+plt.title('Saídas após o Treinamento (Multi-Perceptron)')
+plt.xlabel('Entrada 1')
+plt.ylabel('Entrada 2')
+plt.colorbar()
+plt.grid(True)
+plt.show()

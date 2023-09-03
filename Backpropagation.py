@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Função sigmoide para ativação
 def funcaoSigmoide(x):
@@ -47,13 +48,32 @@ for iteration in range(10000):
     # Atualização dos pesos com base nos deltas (backpropagation)
     pesos_camada_saida += output_camada_oculta.T.dot(delta_saida) * learning_rate
     pesos_camada_oculta += matrizEntrada.T.dot(delta_oculta) * learning_rate
-
 # Teste com os dados de treinamento
 print('Saídas após o treinamento:\n')
+outputs = []
 for i in range(len(matrizEntrada)):
     input_layer = matrizEntrada[i]
     input_camada_oculta = np.dot(input_layer, pesos_camada_oculta)
     output_camada_oculta = funcaoSigmoide(input_camada_oculta)
     input_camada_saida = np.dot(output_camada_oculta, pesos_camada_saida)
     output_camada_saida = funcaoSigmoide(input_camada_saida)
+    outputs.append(output_camada_saida[0])
     print(f"Entrada: {input_layer}, Saída: {output_camada_saida[0]}")
+
+# Converter as saídas para um formato que pode ser usado para plotagem
+outputs = np.array(outputs)
+
+# Plotar os pontos de saída
+plt.figure(figsize=(8, 6))
+plt.scatter(matrizEntrada[:, 0], matrizEntrada[:, 1], c=outputs, cmap='coolwarm')
+plt.title('Saídas após o Treinamento')
+plt.xlabel('Entrada 1')
+plt.ylabel('Entrada 2')
+
+# Adicionar uma linha que separa os pontos
+plt.plot([0.5, 0.5], [0, 1], linestyle='--', color='black')  # Linha vertical
+plt.plot([0, 1], [0.5, 0.5], linestyle='--', color='black')  # Linha horizontal
+
+plt.colorbar()
+plt.grid(True)
+plt.show()
